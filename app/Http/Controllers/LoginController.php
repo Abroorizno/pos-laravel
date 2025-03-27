@@ -27,4 +27,10 @@ class LoginController extends Controller
             return back('login')->with('error', 'Email or Password is not valid, Please check your Credential!')->withInput();
         }
     }
+
+    public function logout()
+    {
+        FacadesAuth::logout();
+        return redirect()->to('login');
+    }
 }

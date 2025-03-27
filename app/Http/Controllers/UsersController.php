@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
-class DashboardController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('dashboard.index');
+        $title = "Data Users";
+        $datas = User::all();
+
+        return view('users.index', compact('title', 'datas'));
     }
 
     /**
@@ -27,7 +31,13 @@ class DashboardController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        User::create([
+            'name' => $request->user_name,
+            'email' => $request->user_email,
+            'password' => bcrypt($request->password),
+        ]);
+
+        return redirect()->to('users');
     }
 
     /**
@@ -51,7 +61,13 @@ class DashboardController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        User::where('id', $id)->update([
+            'name' => $request->user_name,
+            'email' => $request->user_email,
+            'password' => $request->password ? bcrypt($request->password) : User::find($id)->password,
+        ]);
+
+        return redirect()->to('users');
     }
 
     /**
@@ -59,6 +75,8 @@ class DashboardController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        User::where('id', $id)->delete();
+
+        return redirect()->to('users');
     }
 }
