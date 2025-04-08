@@ -6,6 +6,7 @@ use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('dashboard', DashboardController::class);
     Route::resource('categories', CategoriesController::class);
     Route::resource('users', UsersController::class);
+    Route::resource('products', ProductsController::class);
 });
 // Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth'); //backup/DashboardController.php
 // Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');

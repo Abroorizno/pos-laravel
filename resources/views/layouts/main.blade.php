@@ -55,7 +55,8 @@
 
     <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
-    <!-- Page CSS -->
+    <!-- SummerNotes -->
+    <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.css" rel="stylesheet">
 
     <!-- Helpers -->
     <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
@@ -67,45 +68,48 @@
 
   <body>
     <!-- Layout wrapper -->
-    <div class="layout-wrapper layout-content-navbar">
-      <div class="layout-container">
-        <!-- Menu -->
+    <div id="app">
+        <div class="layout-wrapper layout-content-navbar">
+            <div class="layout-container">
+                @include('sweetalert::alert');
+                <!-- Menu -->
 
-        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-          @include('layouts.inc.sidebar')
-        </aside>
-        <!-- / Menu -->
+                <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+                @include('layouts.inc.sidebar')
+                </aside>
+                <!-- / Menu -->
 
-        <!-- Layout container -->
-        <div class="layout-page">
-          <!-- Navbar -->
-            <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
-                @include('layouts.inc.header')
-            </nav>
-          <!-- / Navbar -->
+                <!-- Layout container -->
+                <div class="layout-page">
+                <!-- Navbar -->
+                    <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
+                        @include('layouts.inc.header')
+                    </nav>
+                <!-- / Navbar -->
 
-          <!-- Content wrapper -->
-          <div class="content-wrapper">
+                <!-- Content wrapper -->
+                <div class="content-wrapper">
 
-            <!-- Content -->
-                @yield('content')
-            <!-- / Content -->
+                    <!-- Content -->
+                        @yield('content')
+                    <!-- / Content -->
 
-            <!-- Footer -->
-            <footer class="content-footer footer bg-footer-theme">
-              @include('layouts.inc.footer')
-            </footer>
-            <!-- / Footer -->
+                    <!-- Footer -->
+                    <footer class="content-footer footer bg-footer-theme">
+                    @include('layouts.inc.footer')
+                    </footer>
+                    <!-- / Footer -->
 
-            <div class="content-backdrop fade"></div>
-          </div>
-          <!-- Content wrapper -->
+                    <div class="content-backdrop fade"></div>
+                </div>
+                <!-- Content wrapper -->
+                </div>
+                <!-- / Layout page -->
+            </div>
         </div>
-        <!-- / Layout page -->
-      </div>
 
-      <!-- Overlay -->
-      <div class="layout-overlay layout-menu-toggle"></div>
+        <!-- Overlay -->
+        <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
 
@@ -130,5 +134,17 @@
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <!-- SummerNote -->
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.20/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.summernote').summernote({
+            height: 100 // set editor height
+            });
+        });
+    </script>
+
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
   </body>
 </html>
