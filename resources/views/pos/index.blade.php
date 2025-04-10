@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table mb-3" id="table">
+                                        <table class="table mb-3">
                                             <thead>
                                                 <tr>
                                                     <th>No.</th>
@@ -48,7 +48,7 @@
                                                     </tr>
 
                                                     <!-- MODAL EDIT -->
-                                                    <div class="modal fade" id="edit-users-{{ $users->id }}" tabindex="-1" aria-hidden="true">
+                                                    {{-- <div class="modal fade" id="edit-users-{{ $users->id }}" tabindex="-1" aria-hidden="true">
                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                                 <div class="modal-content">
                                                                     <div class="modal-header">
@@ -84,7 +84,7 @@
                                                                 </form>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
                                                 @endforeach
                                             </tbody>
@@ -109,7 +109,7 @@
                                         <div class="modal-body">
                                             <div class="row">
                                                 {{-- KIRI --}}
-                                                <div class="col-sm-5">
+                                                <div class="col-sm-3">
                                                     <form action="{{ route('pos.store') }}" method="post">
                                                         @csrf
                                                         <div class="row">
@@ -139,72 +139,73 @@
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer"></div>
-                                                    </form>
-                                                </div>
+                                                    </div>
 
-                                                {{-- KANAN --}}
-                                                <div class="card col-sm-7" style="border-radius: 10px; border: 2px solid #e9ecef;">
-                                                        <table class="table mt-3 table-hover">
+                                                    {{-- KANAN --}}
+                                                    <div class="card col-sm-9" style="border-radius: 10px; border: 2px solid #e9ecef;">
+                                                        <table class="table mt-3 table-hover" id="modal-table">
                                                             <thead>
                                                                 <tr>
                                                                     <th>Photo Products</th>
                                                                     <th>Product</th>
                                                                     <th>Qty</th>
                                                                     <th>Price</th>
+                                                                    <th>Subtotals</th>
+                                                                    <th>Action</th>
                                                                 </tr>
                                                             </thead>
-                                                            <tbody></tbody>
+                                                            <tbody>
+                                                            </tbody>
                                                             <tfoot>
                                                                 <tr>
-                                                                    <th colspan="2"> Sub Totals </th>
-                                                                    <td colspan="2">
-                                                                        <input type="number" class="form-control" />
-                                                                    </td>
-                                                                </tr>
-                                                                <tr>
                                                                     <th colspan="2"> Grand Totals</th>
-                                                                    <td colspan="2">
-                                                                        <input type="number" class="form-control" />
+                                                                    <td colspan="3">
+                                                                        <span id="grandTotal"></span>
+                                                                        <input type="hidden" class="form-control" name="grandTotal" value="0" />
                                                                     </td>
                                                                 </tr>
                                                             </tfoot>
                                                         </table>
-                                                    {{-- <form action="{{ route('pos.store') }}" method="post">
-                                                        @csrf
-                                                        <div class="row">
-                                                            <div class="col mb-3">
-                                                                <label for="nameBasic" class="form-label">Product Category</label>
-                                                                <select name="product_category" id="product_category" class="form-control">
-                                                                    <option value="#" disabled selected>Select Category</option>
-                                                                    @foreach ($categories as $category)
+                                                        <div class="mt-3 text-end">
+                                                            <button type="submit" class="btn btn-primary">Add Order</button>
+                                                        </div>
+                                                        {{-- <form action="{{ route('pos.store') }}" method="post">
+                                                            @csrf
+                                                            <div class="row">
+                                                                <div class="col mb-3">
+                                                                    <label for="nameBasic" class="form-label">Product Category</label>
+                                                                    <select name="product_category" id="product_category" class="form-control">
+                                                                        <option value="#" disabled selected>Select Category</option>
+                                                                        @foreach ($categories as $category)
                                                                         <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                                                    @endforeach
-                                                                </select>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col mb-3">
-                                                                <label for="nameBasic" class="form-label">Product Name</label>
-                                                                <select name="product_id" id="" class="form-control">
-                                                                    <option value="#" disabled selected>Select Category</option>
-                                                                    <option value=""></option>
-                                                                </select>
+                                                            <div class="row">
+                                                                <div class="col mb-3">
+                                                                    <label for="nameBasic" class="form-label">Product Name</label>
+                                                                    <select name="product_id" id="" class="form-control">
+                                                                        <option value="#" disabled selected>Select Category</option>
+                                                                        <option value=""></option>
+                                                                    </select>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col mb-3">
-                                                                <label for="nameBasic" class="form-label">Password</label>
-                                                                <input type="password" name="password" id="nameBasic" class="form-control" required />
+                                                            <div class="row">
+                                                                <div class="col mb-3">
+                                                                    <label for="nameBasic" class="form-label">Password</label>
+                                                                    <input type="password" name="password" id="nameBasic" class="form-control" required />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="">
-                                                                <button type="submit" class="btn btn-primary">Save</button>
-                                                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <div class="row mt-3">
+                                                                <div class="">
+                                                                    <button type="submit" class="btn btn-primary">Save</button>
+                                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div class="modal-footer"></div>
-                                                    </form> --}}
+                                                            <div class="modal-footer"></div>
+                                                        </form> --}}
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>

@@ -147,90 +147,122 @@
     @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"]);
 
     <script>
-        $('#product_category').change(function() {
-            var category_id = $(this).val();
+        $(document).ready(function() {
+        const modal = $('#add-orders'); // Dapatkan referensi ke modal
+
+        function formatRupiah(amount) {
+            return amount.toLocaleString('id-ID', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0
+            });
+        }
+
+        modal.find('#product_category').change(function() { // Cari elemen di dalam modal
+            let category_id = $(this).val();
             if (category_id) {
                 $.ajax({
                     url: '/get-products/' + category_id,
                     type: 'GET',
                     dataType: 'json',
                     success: function(data) {
-                        // console.log("Result : ", data);
-                        $('#product_subcategory').empty();
-                        $('#product_subcategory').append('<option value="" disabled selected>Select Product</option>');
+                        const productSubcategorySelect = modal.find('#product_subcategory'); // Cari elemen di dalam modal
+                        productSubcategorySelect.empty();
+                        productSubcategorySelect.append('<option value="" disabled selected>Select Product</option>');
                         $.each(data.data, function(key, value) {
-                            $('#product_subcategory').append('<option value="' + value.id + '" data-price="'+ value.product_price +'" data-photo="'+ value.product_photo +'">' + value.product_name + '</option>');
+                            productSubcategorySelect.append('<option value="' + value.id + '" data-price="'+ value.product_price +'" data-photo="'+ value.product_photo +'">' + value.product_name + '</option>');
                         });
                     }
                 });
             } else {
-                $('#product_subcategory').empty();
+                modal.find('#product_subcategory').empty(); // Cari elemen di dalam modal
             }
         });
 
-        $(".add-row").click(function(){
-            let tbody = $('tbody');
-            let selectedOption = $("#product_subcategory").find("option:selected");
-            let productPrice = selectedOption.data('price');
-            let productPhoto = selectedOption.data('photo');
-            // console.log(productPrice);
+        modal.find(".add-row").click(function() { // Cari elemen di dalam modal
+            const tbody = modal.find('table tbody'); // Cari tbody di dalam modal
+            const productCategory = modal.find("#product_category"); // Cari elemen di dalam modal
+            const productSubcategory = modal.find("#product_subcategory"); // Cari elemen di dalam modal
+            const selectedOption = productSubcategory.find('option:selected');
+            const productName = selectedOption.text();
+            const productPhoto = selectedOption.data('photo');
+            const productPrice = parseInt(selectedOption.data('price'));
 
-            function formatRupiah(amount) {
-                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-            }
-
-            if($("#category_id").val() == ""){
+            if (productCategory.val() == '') {
                 alert("Please select a category");
                 return false;
             }
-            if($("#product_subcategory").val() == ""){
+
+            if (productSubcategory.val() == '') {
                 alert("Please select a product");
                 return false;
             }
 
-            let newRow = "<tr>";
-                newRow += "<td><img src='{{ asset('storage/') }}/" + productPhoto + "' alt='Product Image' style='width: 100px; height: 100px;'></td>";
-
-                newRow += "<td>" + $("#product_subcategory option:selected").text() + "<input type='hidden' class='form-control' name='product_name[]' value='" + $("#product_subcategory option:selected").text() + "' readonly></td>";
-
-                newRow += "<td><input type='number' class='form-control' name='product_qty[]' value='1' style='width: 80px;'></td>";
-
-                newRow += "<td>Rp. " + formatRupiah(productPrice) + " <input type='hidden' class='form-control' name='product_price[]' value='" + productPrice + "' readonly></td>";
-
-                newRow += "</tr>";
+            let newRow = `
+                <tr>
+                    <td><img src='{{ asset('storage/') }}/${productPhoto}' alt='Product Image' style='width: 100px; height: 100px;'></td>
+                    <td>
+                        <span>${selectedOption.text()}</span>
+                        <input type='hidden' class='form-control' name='product_name[]' value='${selectedOption.text()}' readonly>
+                    </td>
+                    <td>
+                        <input type='number' class='qty form-control' name='product_qty[]' value='1' min='0' style='width: 80px;'>
+                    </td>
+                    <td>
+                        <span class='price' data-price='${productPrice}'>Rp. ${formatRupiah(productPrice)}</span>
+                        <input type='hidden' class='form-control' name='product_price[]' value='${productPrice}' readonly>
+                    </td>
+                    <td>
+                        <span class='subtotal'>Rp. ${formatRupiah(productPrice)}</span>
+                        <input type='hidden' class='form-control' name='product_subtotal[]' value='${productPrice}' readonly>
+                    </td>
+                    <td>
+                        <button type='button' class='btn btn-danger on-delete'>Remove</button>
+                    </td>
+                </tr>
+            `;
 
             tbody.append(newRow);
-
+            grandTotal();
             clearAll();
         });
 
-        function clearAll(){
-            $("#product_category").val("");
-            $("#product_subcategory").empty();
-            $("#product_subcategory").append('<option value="" disabled selected>Select Product</option>');
+        modal.find('table tbody').on('input', '.qty', function() { // Cari tbody di dalam modal
+            let row = $(this).closest('tr');
+            let qty = parseInt($(this).val()) || 0;
+            let price = parseInt(row.find('.price').data('price')) || 0;
+            let subtotals = qty * price;
 
+            row.find('.subtotal').text('Rp. ' + formatRupiah(subtotals));
+            row.find('input[name="product_subtotal[]"]').val(subtotals);
+            row.find('input[name="product_qty[]"]').val(qty);
+            row.find('input[name="product_price[]"]').val(price);
+            row.find('input[name="product_name[]"]').val(row.find('span').text());
+
+            grandTotal();
+        });
+
+        function grandTotal() {
+            let grandTotal = 0;
+            modal.find('table tbody .subtotal').each(function() { // Cari elemen di dalam modal
+                let subtotal = parseInt($(this).text().replace(/[^0-9]/g, '')) || 0;
+                grandTotal += subtotal;
+            });
+
+            modal.find('#grandTotal').text('Rp. ' + formatRupiah(grandTotal)); // Cari elemen di dalam modal
+            modal.find('input[name="grandTotal"]').val(grandTotal); // Cari elemen di dalam modal
         }
 
-        // $(".remove-row").click(function(){
-        //     let tbody = $('tbody');
-        //     let lastRow = tbody.find('tr:last');
-        //     if(lastRow.length){
-        //         lastRow.remove();
-        //     }
-        // });
+        function clearAll() {
+            modal.find("#product_category").val(""); // Cari elemen di dalam modal
+            modal.find("#product_subcategory").empty().append('<option value="" disabled selected>Select Product</option>'); // Cari elemen di dalam modal
+        }
 
-        // $(".remove-all").click(function(){
-        //     let tbody = $('tbody');
-        //     tbody.empty();
-        // });
-
-        // $(".submit").click(function(){
-        //     let tbody = $('tbody');
-        //     let lastRow = tbody.find('tr:last');
-        //     if(lastRow.length){
-        //         lastRow.remove();
-        //     }
-        // });
+        modal.find('table tbody').on('click', '.on-delete', function() { // Cari tbody di dalam modal
+            $(this).closest('tr').remove();
+            grandTotal();
+        });
+    });
     </script>
   </body>
 </html>
+
