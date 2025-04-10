@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered mb-3" id="table">
+                                        <table class="table mb-3" id="table">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>

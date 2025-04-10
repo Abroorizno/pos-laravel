@@ -68,41 +68,40 @@
 
   <body>
     <!-- Layout wrapper -->
-    <div id="app">
+    @include('sweetalert::alert')
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
-                @include('sweetalert::alert');
                 <!-- Menu -->
 
                 <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
-                @include('layouts.inc.sidebar')
+                    @include('layouts.inc.sidebar')
                 </aside>
                 <!-- / Menu -->
 
                 <!-- Layout container -->
                 <div class="layout-page">
-                <!-- Navbar -->
+                    <!-- Navbar -->
                     <nav class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme" id="layout-navbar">
                         @include('layouts.inc.header')
                     </nav>
-                <!-- / Navbar -->
+                    <!-- / Navbar -->
 
-                <!-- Content wrapper -->
-                <div class="content-wrapper">
+                    <!-- Content wrapper -->
+                    <div class="content-wrapper">
 
-                    <!-- Content -->
-                        @yield('content')
-                    <!-- / Content -->
+                        <!-- Content -->
+                            @yield('content')
+                        <!-- / Content -->
 
-                    <!-- Footer -->
-                    <footer class="content-footer footer bg-footer-theme">
-                    @include('layouts.inc.footer')
-                    </footer>
-                    <!-- / Footer -->
+                        <!-- Footer -->
+                        <footer class="content-footer footer bg-footer-theme">
+                        @include('layouts.inc.footer')
+                        </footer>
+                        <!-- / Footer -->
 
-                    <div class="content-backdrop fade"></div>
-                </div>
-                <!-- Content wrapper -->
+                        <div class="content-backdrop fade"></div>
+                    <!-- / Content wrapper -->
+                    </div>
                 </div>
                 <!-- / Layout page -->
             </div>
@@ -110,7 +109,6 @@
 
         <!-- Overlay -->
         <div class="layout-overlay layout-menu-toggle"></div>
-    </div>
     <!-- / Layout wrapper -->
 
     <!-- Core JS -->
@@ -128,6 +126,7 @@
 
     <!-- Main JS -->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script src="{{ asset('../assets/js/jquery-3.7.1.min.js') }}"></script>
 
     <!-- Page JS -->
     <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
@@ -145,6 +144,93 @@
         });
     </script>
 
-    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"])
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"]);
+
+    <script>
+        $('#product_category').change(function() {
+            var category_id = $(this).val();
+            if (category_id) {
+                $.ajax({
+                    url: '/get-products/' + category_id,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function(data) {
+                        // console.log("Result : ", data);
+                        $('#product_subcategory').empty();
+                        $('#product_subcategory').append('<option value="" disabled selected>Select Product</option>');
+                        $.each(data.data, function(key, value) {
+                            $('#product_subcategory').append('<option value="' + value.id + '" data-price="'+ value.product_price +'" data-photo="'+ value.product_photo +'">' + value.product_name + '</option>');
+                        });
+                    }
+                });
+            } else {
+                $('#product_subcategory').empty();
+            }
+        });
+
+        $(".add-row").click(function(){
+            let tbody = $('tbody');
+            let selectedOption = $("#product_subcategory").find("option:selected");
+            let productPrice = selectedOption.data('price');
+            let productPhoto = selectedOption.data('photo');
+            // console.log(productPrice);
+
+            function formatRupiah(amount) {
+                return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            }
+
+            if($("#category_id").val() == ""){
+                alert("Please select a category");
+                return false;
+            }
+            if($("#product_subcategory").val() == ""){
+                alert("Please select a product");
+                return false;
+            }
+
+            let newRow = "<tr>";
+                newRow += "<td><img src='{{ asset('storage/') }}/" + productPhoto + "' alt='Product Image' style='width: 100px; height: 100px;'></td>";
+
+                newRow += "<td>" + $("#product_subcategory option:selected").text() + "<input type='hidden' class='form-control' name='product_name[]' value='" + $("#product_subcategory option:selected").text() + "' readonly></td>";
+
+                newRow += "<td><input type='number' class='form-control' name='product_qty[]' value='1' style='width: 80px;'></td>";
+
+                newRow += "<td>Rp. " + formatRupiah(productPrice) + " <input type='hidden' class='form-control' name='product_price[]' value='" + productPrice + "' readonly></td>";
+
+                newRow += "</tr>";
+
+            tbody.append(newRow);
+
+            clearAll();
+        });
+
+        function clearAll(){
+            $("#product_category").val("");
+            $("#product_subcategory").empty();
+            $("#product_subcategory").append('<option value="" disabled selected>Select Product</option>');
+
+        }
+
+        // $(".remove-row").click(function(){
+        //     let tbody = $('tbody');
+        //     let lastRow = tbody.find('tr:last');
+        //     if(lastRow.length){
+        //         lastRow.remove();
+        //     }
+        // });
+
+        // $(".remove-all").click(function(){
+        //     let tbody = $('tbody');
+        //     tbody.empty();
+        // });
+
+        // $(".submit").click(function(){
+        //     let tbody = $('tbody');
+        //     let lastRow = tbody.find('tr:last');
+        //     if(lastRow.length){
+        //         lastRow.remove();
+        //     }
+        // });
+    </script>
   </body>
 </html>

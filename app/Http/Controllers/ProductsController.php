@@ -52,7 +52,8 @@ class ProductsController extends Controller
         }
 
         Products::create($data);
-        Alert::info('Success', 'Success Added Product');
+        Alert::success('Success', 'Success Added Product');
+        // toast('Success Added Product', 'success')->autoClose(3000);
         return redirect()->to('products');
     }
 
@@ -113,7 +114,7 @@ class ProductsController extends Controller
         File::delete(public_path('storage/' . $product->product_photo));
 
         $product->delete();
-        Alert::warning('Success', 'Delete Product Success');
+        Alert::success('Success', 'Delete Product Success');
         return redirect()->to('products');
     }
 }

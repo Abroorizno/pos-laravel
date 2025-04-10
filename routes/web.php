@@ -7,6 +7,7 @@ use App\Http\Controllers\LatihanController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\TransactionContoller;
 use App\Http\Controllers\UsersController;
 use Illuminate\Http\Request;
 
@@ -14,15 +15,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('belajar', [BelajarController::class, 'index']);
-Route::get('tambah', [BelajarController::class, 'tambah']);
-Route::get('kurang', [BelajarController::class, 'kurang']);
-Route::get('bagi', [BelajarController::class, 'bagi']);
-Route::get('kali', [BelajarController::class, 'kali']);
+// Route::get('belajar', [BelajarController::class, 'index']);
+// Route::get('tambah', [BelajarController::class, 'tambah']);
+// Route::get('kurang', [BelajarController::class, 'kurang']);
+// Route::get('bagi', [BelajarController::class, 'bagi']);
+// Route::get('kali', [BelajarController::class, 'kali']);
 
-Route::post('action-tambah', [BelajarController::class, 'actionTambah']);
+// Route::post('action-tambah', [BelajarController::class, 'actionTambah']);
 
-Route::get('latihan', [LatihanController::class, 'index']);
+// Route::get('latihan', [LatihanController::class, 'index']);
 
 //LOGIN
 // Route::get('login', [LoginController::class, 'login']);
@@ -37,9 +38,11 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('categories', CategoriesController::class);
     Route::resource('users', UsersController::class);
     Route::resource('products', ProductsController::class);
+    Route::resource('pos', TransactionContoller::class);
+
+    Route::get('get-products/{id}', [TransactionContoller::class, 'getProduct']);
 });
-// Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('auth'); //backup/DashboardController.php
-// Route::get('dashboard', [DashboardController::class, 'index'])->middleware('auth');
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();

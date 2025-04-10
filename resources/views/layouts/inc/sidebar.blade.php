@@ -89,11 +89,34 @@
               </a>
             </li>
 
-            <li class="menu-item">
+            {{-- <li class="menu-item">
               <a href="/users" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
                 <div data-i18n="Analytics">Users</div>
               </a>
+            </li> --}}
+
+
+            {{-- FORM POST --}}
+            <li class="menu-header small text-uppercase"><span class="menu-header-text">POS MANAGEMENT</span></li>
+
+            <li class="menu-item">
+                <a href="javascript:void(0);" class="menu-link menu-toggle">
+                    <i class="menu-icon tf-icons bx bx-basket"></i>
+                    <div data-i18n="Form Elements">Form POS</div>
+                </a>
+                <ul class="menu-sub">
+                    <li class="menu-item">
+                        <a href="/pos" class="menu-link">
+                            <div data-i18n="Basic Inputs">POS</div>
+                        </a>
+                    </li>
+                    <li class="menu-item">
+                        <a href="forms-input-groups.html" class="menu-link">
+                            <div data-i18n="Input groups">POS Sale</div>
+                        </a>
+                    </li>
+                </ul>
             </li>
 
 

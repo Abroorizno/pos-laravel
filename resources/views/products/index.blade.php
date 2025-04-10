@@ -14,7 +14,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
-                                        <table class="table table-bordered mb-3" id="table">
+                                        <table class="table mb-3" id="table">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -173,11 +173,6 @@
                                                 </div>
                                                 <div class="col-sm-6 mb-3">
                                                     <label for="nameBasic" class="form-label">Product Category</label>
-                                                    {{-- <select name="product_category" id="" class="form-control">
-                                                        <option value="#" selected disabled>Select Category</option>
-                                                        <option value="1">Makanan</option>
-                                                        <option value="2">Minuman</option>
-                                                    </select> --}}
                                                     <select name="product_category" id="product_category" class="form-control">
                                                         <option value="#" disabled selected>Select Category</option>
                                                         @foreach ($categories as $category)
