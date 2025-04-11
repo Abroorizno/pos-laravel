@@ -10,7 +10,12 @@
                         <div class="d-flex align-items-end row">
                             <div class="col-sm-12">
                                 <div class="card-header">
-                                    <h5 class="card-title text-primary">{{ $title ?? '' }}</h5>
+                                    <div class="d-flex justify-content-between align-items-start flex-column flex-sm-row mt-3">
+                                        <h5 class="card-title text-primary">{{ $title ?? '' }}</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-orders">
+                                            Add Orders
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -34,7 +39,7 @@
                                                         <td>{{ $no++ }}.</td>
                                                         <td>{{ $order->order_code}}</td>
                                                         <td>{{ $order->created_at->format('d/m/Y') }}</td>
-                                                        <td>{{ $order->order_mount}}</td>
+                                                        <td>{{ 'Rp. '. number_format($order->order_mount, 0,'.',',') }}</td>
                                                         <td>{{ $order->order_status ? 'Paid' : 'Unpaid'}}</td>
                                                         <td>
                                                             <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#detail-orders-{{ $order->id }}">DETAILS</a>
@@ -52,12 +57,6 @@
                                     @endforeach
                                             </tbody>
                                         </table>
-                                    </div>
-
-                                    <div class="d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-orders">
-                                            Add Orders
-                                        </button>
                                     </div>
                                 </div>
 
@@ -105,8 +104,8 @@
                                                                             </td>
                                                                             <td>{{ $detail->product->product_name }}</td>
                                                                             <td>{{ $detail->qty }}</td>
-                                                                            <td>{{ number_format($detail->order_price, 2) }}</td>
-                                                                            <td>{{ number_format($detail->qty * $detail->order_price, 2) }}</td>
+                                                                            <td>{{ 'Rp. '. number_format($detail->order_price, 0, ',', '.') }}</td>
+                                                                            <td>{{ 'Rp. '. number_format($detail->qty * $detail->order_price, 0, ',', '.') }}</td>
                                                                         </tr>
                                                                     @endforeach
                                                                 </tbody>
@@ -114,8 +113,8 @@
                                                         </div>
                                                     </div>
                                                     <div class="modal-footer">
-                                                        <a href="{{ route('print', $order->id) }}" class="btn btn-primary"><i class="bx bx-printer"></i> Print</a>
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <a href="{{ route('print', $order->id) }}" class="btn btn-primary" target="_blank"><i class="bx bx-printer"></i> Print</a>
+                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -210,4 +209,3 @@
         </div>
     </section>
 @endsection
-

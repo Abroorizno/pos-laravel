@@ -58,7 +58,7 @@ class TransactionContoller extends Controller
         foreach ($qty as $key => $value) {
             $data = [
                 'order_id' => $order->id,
-                'product_id' => $request->product_name[$key],
+                'product_id' => $request->product_id[$key],
                 'qty' => $request->product_qty[$key],
                 'order_price' => $request->product_price[$key],
                 'order_subtotal' => $request->product_subtotal[$key],

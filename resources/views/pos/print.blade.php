@@ -47,6 +47,8 @@
     .item-row .right{
         flex: 0 0 auto;
         text-align: right;
+        font-weight: bold;
+
     }
 
     .footer{
@@ -61,6 +63,14 @@
     .liner{
         /* border-top: 1px solid #000; */
         margin: 5px 0;
+    }
+
+    .left-price{
+        font-weight: bold;
+    }
+
+    .left-total {
+        font-weight: bold;
     }
 
     @media print {
@@ -96,15 +106,15 @@
                 @foreach ($orders->orderDetails as $orderDetail)
                     <div class="item-row">
                         <div class="left">{{ $orderDetail->product->product_name }}</div>
-                        <div class="right">{{ 'Rp.' . number_format($orderDetail->order_subtotal, 0, ',', '.') }}</div>
+                        <div class="right">{{ 'Rp. ' . number_format($orderDetail->order_subtotal, 0, ',', '.') }}</div>
                     </div>
                     <div class="item-row">
-                        <div class="left">{{ $orderDetail->qty .' x Rp.'. number_format($orderDetail->order_price, 0, ',', '.') }}</div>
+                        <div class="left-price">{{ $orderDetail->qty .' x Rp. '. number_format($orderDetail->order_price, 0, ',', '.') }}</div>
                     </div>
                 @endforeach
                 <div class="divider"></div>
             <div class="item-row">
-                <div class="left">TOTAL</div>
+                <div class="left-total">TOTAL</div>
                 <div class="right">Rp. {{ number_format($orders->order_mount, 0, ',', '.') }}</div>
             </div>
             <div class="divider"></div>

@@ -177,14 +177,15 @@
         });
 
         modal.find(".add-row").click(function() { // Cari elemen di dalam modal
-            const tbody = modal.find('table tbody'); // Cari tbody di dalam modal
-            const productCategory = modal.find("#product_category"); // Cari elemen di dalam modal
-            const productSubcategory = modal.find("#product_subcategory"); // Cari elemen di dalam modal
-            const selectedOption = productSubcategory.find('option:selected');
-            const productId = selectedOption.val();
-            const productName = selectedOption.text();
-            const productPhoto = selectedOption.data('photo');
-            const productPrice = parseInt(selectedOption.data('price'));
+            let tbody = modal.find('table tbody'); // Cari tbody di dalam modal
+            let productCategory = modal.find("#product_category"); // Cari elemen di dalam modal
+            let productSubcategory = modal.find("#product_subcategory"); // Cari elemen di dalam modal
+            let selectedOption = productSubcategory.find('option:selected');
+
+            let productId = selectedOption.val();
+            let productName = selectedOption.text();
+            let productPhoto = selectedOption.data('photo');
+            let productPrice = parseInt(selectedOption.data('price'));
 
             if (productCategory.val() == '') {
                 alert("Please select a category");
@@ -200,8 +201,8 @@
                 <tr>
                     <td><img src='{{ asset('storage/') }}/${productPhoto}' alt='Product Image' style='width: 100px; height: 100px;'></td>
                     <td>
-                        <span>${selectedOption.text()}</span>
-                        <input type='hidden' class='form-control' name='product_name[]' value='${productId}' readonly>
+                        <span>${productName}</span>
+                        <input type='hidden' class='form-control' name='product_id[]' value='${productId}'>
                     </td>
                     <td>
                         <input type='number' class='qty form-control' name='product_qty[]' value='1' min='0' style='width: 80px;'>
@@ -235,7 +236,7 @@
             row.find('input[name="product_subtotal[]"]').val(subtotals);
             row.find('input[name="product_qty[]"]').val(qty);
             row.find('input[name="product_price[]"]').val(price);
-            row.find('input[name="product_name[]"]').val(row.find('span').text());
+            // row.find('input[name="product_name[]"]').val(row.find('span').text());
 
             grandTotal();
         });
