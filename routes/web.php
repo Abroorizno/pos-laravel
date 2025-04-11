@@ -40,6 +40,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('products', ProductsController::class);
     Route::resource('pos', TransactionContoller::class);
 
+    Route::get('print/{id}', [TransactionContoller::class, 'print'])->name('print');
     Route::get('get-products/{id}', [TransactionContoller::class, 'getProduct']);
 });
 

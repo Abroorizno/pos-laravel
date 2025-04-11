@@ -15,13 +15,18 @@ class Order extends Model
         'order_status',
     ];
 
-    // public function orderDetails()
-    // {
-    //     return $this->hasMany(orderDetails::class, 'order_id', 'id');
-    // }
-
     public function category()
     {
         return $this->hasMany(Categories::class, 'id', 'category_id');
+    }
+
+    public function orderDetails()
+    {
+        return $this->hasMany(orderDetails::class, 'order_id', 'id');
+    }
+
+    public function product()
+    {
+        return $this->hasMany(Products::class, 'id', 'product_id');
     }
 }

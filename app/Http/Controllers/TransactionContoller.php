@@ -9,6 +9,7 @@ use App\Models\Products;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
+
 class TransactionContoller extends Controller
 {
     /**
@@ -17,7 +18,9 @@ class TransactionContoller extends Controller
     public function index()
     {
         $title = 'Transaction Order Data';
-        $orders = Order::with('category')->get();
+        $orders = Order::with('orderDetails', 'category', 'product')->orderBy('id', 'desc')->get();
+        // return $orders;
+
         $categories = Categories::orderBy('id', 'desc')->get();
         // return $products;
         return view('pos.index', compact('title', 'orders', 'categories'));
@@ -55,14 +58,15 @@ class TransactionContoller extends Controller
         foreach ($qty as $key => $value) {
             $data = [
                 'order_id' => $order->id,
-                'product_id' => $request->product_id[$key],
-                'qty' => $request->qty[$key],
-                'order_price' => $request->order_price[$key],
-                'order_subtotal' => $request->order_subtotal[$key],
+                'product_id' => $request->product_name[$key],
+                'qty' => $request->product_qty[$key],
+                'order_price' => $request->product_price[$key],
+                'order_subtotal' => $request->product_subtotal[$key],
             ];
             orderDetails::create($data);
         };
-        Alert::class('success', 'Transaction Success');
+
+        Alert::success('Success', 'Order Success!');
         return redirect()->route('pos.index')->with('success', 'Transaction Success');
     }
 
@@ -107,5 +111,20 @@ class TransactionContoller extends Controller
             'data' => $products
         ];
         return response()->json($resonse, 200);
+    }
+
+    public function print($id)
+    {
+        // $order = Order::find($id);
+        // $orderDetails = orderDetails::where('order_id', $id)->get();
+        // $resonse = [
+        //     'status' => 'success',
+        //     'message' => 'Data found',
+        //     'data' => $order,
+        //     'orderDetails' => $orderDetails
+        // ];
+        // return response()->json($resonse, 200);
+        $orders = Order::with('orderDetails', 'category', 'product')->find($id);
+        return view('pos.print', compact('id', 'orders'));
     }
 }

@@ -68,7 +68,7 @@
 
   <body>
     <!-- Layout wrapper -->
-    @include('sweetalert::alert')
+    @include('sweetalert::alert');
         <div class="layout-wrapper layout-content-navbar">
             <div class="layout-container">
                 <!-- Menu -->
@@ -144,8 +144,6 @@
         });
     </script>
 
-    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"]);
-
     <script>
         $(document).ready(function() {
         const modal = $('#add-orders'); // Dapatkan referensi ke modal
@@ -183,6 +181,7 @@
             const productCategory = modal.find("#product_category"); // Cari elemen di dalam modal
             const productSubcategory = modal.find("#product_subcategory"); // Cari elemen di dalam modal
             const selectedOption = productSubcategory.find('option:selected');
+            const productId = selectedOption.val();
             const productName = selectedOption.text();
             const productPhoto = selectedOption.data('photo');
             const productPrice = parseInt(selectedOption.data('price'));
@@ -202,7 +201,7 @@
                     <td><img src='{{ asset('storage/') }}/${productPhoto}' alt='Product Image' style='width: 100px; height: 100px;'></td>
                     <td>
                         <span>${selectedOption.text()}</span>
-                        <input type='hidden' class='form-control' name='product_name[]' value='${selectedOption.text()}' readonly>
+                        <input type='hidden' class='form-control' name='product_name[]' value='${productId}' readonly>
                     </td>
                     <td>
                         <input type='number' class='qty form-control' name='product_qty[]' value='1' min='0' style='width: 80px;'>
@@ -263,6 +262,8 @@
         });
     });
     </script>
+
+    @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"]);
   </body>
 </html>
 

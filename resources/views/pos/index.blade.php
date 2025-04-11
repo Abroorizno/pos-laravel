@@ -38,7 +38,7 @@
                                                         <td>{{ $order->order_status ? 'Paid' : 'Unpaid'}}</td>
                                                         <td>
                                                             <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#detail-orders-{{ $order->id }}">DETAILS</a>
-                                                            <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#edit-orders-{{ $order->id }}">DETAILS</a>
+                                                            {{-- <a href="javascript:void(0)" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#edit-orders-{{ $order->id }}">DETAILS</a> --}}
                                                             {{-- <form action="{{ route('users.destroy', $users->id) }}" method="POST" style="display: inline;">
                                                                 @csrf
                                                                 @method('DELETE')
@@ -46,47 +46,10 @@
                                                             </form> --}}
                                                         </td>
                                                     </tr>
-
-                                                    <!-- MODAL EDIT -->
-                                                    {{-- <div class="modal fade" id="edit-users-{{ $users->id }}" tabindex="-1" aria-hidden="true">
-                                                        <div class="modal-dialog modal-dialog-centered" role="document">
-                                                                <div class="modal-content">
-                                                                    <div class="modal-header">
-                                                                        <h5 class="modal-title">Edit Category</h5>
-                                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                    </div>
-                                                                <div class="modal-body">
-                                                                    <form action="{{ route('users.update', $users->id) }}" method="post">
-                                                                    @csrf
-                                                                    @method('PUT')
-                                                                    <div class="row">
-                                                                        <div class="col mb-3">
-                                                                            <label for="editUsersName{{ $users->id }}" class="form-label">User Name</label>
-                                                                            <input type="text" name="user_name" id="editUsersName{{ $users->id }}" class="form-control" value="{{ $users->name }}" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col mb-3">
-                                                                            <label for="nameBasic" class="form-label">Email</label>
-                                                                            <input type="email" name="user_email" id="nameBasic" class="form-control" value="{{ $users->email }}"  />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="row">
-                                                                        <div class="col mb-3">
-                                                                            <label for="nameBasic" class="form-label">Password</label>
-                                                                            <input type="password" name="password" id="nameBasic" class="form-control" />
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="submit" class="btn btn-primary">Save Change</button>
-                                                                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div> --}}
                                                 </div>
-                                                @endforeach
+                                            </div>
+                                        </div>
+                                    @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -98,6 +61,68 @@
                                     </div>
                                 </div>
 
+                                {{-- MODAL DETAIL --}}
+                                @foreach ($orders as $order)
+                                    <div class="modal fade" id="detail-orders-{{ $order->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Order Details</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row mb-3">
+                                                        <div class="col mb-3">
+                                                            <label class="form-label">Order Code</label>
+                                                            <input type="text" class="form-control" value="{{ $order->order_code }}" readonly />
+                                                        </div>
+                                                        <div class="col mb-3">
+                                                            <label class="form-label">Order Date</label>
+                                                            <input type="text" class="form-control" value="{{ $order->created_at->format('d/m/Y') }}" readonly />
+                                                        </div>
+                                                        <div class="col mb-3">
+                                                            <label class="form-label">Order Status</label>
+                                                            <input type="text" class="form-control" value="{{ $order->order_status ? 'Paid' : 'Unpaid' }}" readonly />
+                                                        </div>
+                                                    </div>
+                                                    <div class="row mb-3">
+                                                        <div class="col-sm mb-3">
+                                                            <table class="table custom-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Product Photo</th>
+                                                                        <th>Product Name</th>
+                                                                        <th>Quantity</th>
+                                                                        <th>Price</th>
+                                                                        <th>Subtotal</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach ($order->orderDetails as $detail)
+                                                                        <tr>
+                                                                            <td>
+                                                                                <img src="{{ asset('storage/' . $detail->product->product_photo) }}" alt="Product Image" class="img-fluid" style="width: 150px; height: 150px;">
+                                                                            </td>
+                                                                            <td>{{ $detail->product->product_name }}</td>
+                                                                            <td>{{ $detail->qty }}</td>
+                                                                            <td>{{ number_format($detail->order_price, 2) }}</td>
+                                                                            <td>{{ number_format($detail->qty * $detail->order_price, 2) }}</td>
+                                                                        </tr>
+                                                                    @endforeach
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <a href="{{ route('print', $order->id) }}" class="btn btn-primary"><i class="bx bx-printer"></i> Print</a>
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
+
                                 {{-- MODAL --}}
                                 <div class="modal fade" id="add-orders" tabindex="-1" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
@@ -107,69 +132,10 @@
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" ></button>
                                         </div>
                                         <div class="modal-body">
-                                            <div class="row">
+                                            <form action="{{ route('pos.store') }}" method="post">
+                                                <div class="row">
                                                 {{-- KIRI --}}
-                                                <div class="col-sm-3">
-                                                    <form action="{{ route('pos.store') }}" method="post">
-                                                        @csrf
-                                                        <div class="row">
-                                                            <div class="col mb-3">
-                                                                <label for="nameBasic" class="form-label">Product Category</label>
-                                                                <select name="product_category" id="product_category" class="form-control">
-                                                                    <option value="#" disabled selected>Select Category</option>
-                                                                    @foreach ($categories as $category)
-                                                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row">
-                                                            <div class="col mb-3">
-                                                                <label for="nameBasic" class="form-label">Product Name</label>
-                                                                <select name="product_subcategory" id="product_subcategory" class="form-control">
-                                                                    <option value="#" disabled selected>--</option>
-                                                                    <option value=""></option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="row mt-3">
-                                                            <div class="">
-                                                                <button type="button" class="btn btn-primary add-row">Add To Chart</button>
-                                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer"></div>
-                                                    </div>
-
-                                                    {{-- KANAN --}}
-                                                    <div class="card col-sm-9" style="border-radius: 10px; border: 2px solid #e9ecef;">
-                                                        <table class="table mt-3 table-hover" id="modal-table">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th>Photo Products</th>
-                                                                    <th>Product</th>
-                                                                    <th>Qty</th>
-                                                                    <th>Price</th>
-                                                                    <th>Subtotals</th>
-                                                                    <th>Action</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                            </tbody>
-                                                            <tfoot>
-                                                                <tr>
-                                                                    <th colspan="2"> Grand Totals</th>
-                                                                    <td colspan="3">
-                                                                        <span id="grandTotal"></span>
-                                                                        <input type="hidden" class="form-control" name="grandTotal" value="0" />
-                                                                    </td>
-                                                                </tr>
-                                                            </tfoot>
-                                                        </table>
-                                                        <div class="mt-3 text-end">
-                                                            <button type="submit" class="btn btn-primary">Add Order</button>
-                                                        </div>
-                                                        {{-- <form action="{{ route('pos.store') }}" method="post">
+                                                    <div class="col-sm-3">
                                                             @csrf
                                                             <div class="row">
                                                                 <div class="col mb-3">
@@ -177,7 +143,7 @@
                                                                     <select name="product_category" id="product_category" class="form-control">
                                                                         <option value="#" disabled selected>Select Category</option>
                                                                         @foreach ($categories as $category)
-                                                                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                                                                            <option value="{{ $category->id }}">{{ $category->category_name }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -185,29 +151,53 @@
                                                             <div class="row">
                                                                 <div class="col mb-3">
                                                                     <label for="nameBasic" class="form-label">Product Name</label>
-                                                                    <select name="product_id" id="" class="form-control">
-                                                                        <option value="#" disabled selected>Select Category</option>
+                                                                    <select name="product_subcategory" id="product_subcategory" class="form-control">
+                                                                        <option value="#" disabled selected>--</option>
                                                                         <option value=""></option>
                                                                     </select>
                                                                 </div>
                                                             </div>
-                                                            <div class="row">
-                                                                <div class="col mb-3">
-                                                                    <label for="nameBasic" class="form-label">Password</label>
-                                                                    <input type="password" name="password" id="nameBasic" class="form-control" required />
-                                                                </div>
-                                                            </div>
                                                             <div class="row mt-3">
                                                                 <div class="">
-                                                                    <button type="submit" class="btn btn-primary">Save</button>
-                                                                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                                    <button type="button" class="btn btn-primary add-row">Add To Chart</button>
+                                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
                                                                 </div>
                                                             </div>
                                                             <div class="modal-footer"></div>
-                                                        </form> --}}
-                                                    </form>
+                                                        </div>
+
+                                                        {{-- KANAN --}}
+                                                        <div class="card col-sm-9" style="border-radius: 10px; border: 2px solid #e9ecef;">
+                                                            <table class="table mt-3 table-hover" id="modal-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Photo Products</th>
+                                                                        <th>Product</th>
+                                                                        <th>Qty</th>
+                                                                        <th>Price</th>
+                                                                        <th>Subtotals</th>
+                                                                        <th>Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                </tbody>
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th colspan="2"> Grand Totals</th>
+                                                                        <td colspan="3">
+                                                                            <span id="grandTotal"></span>
+                                                                            <input type="hidden" class="form-control" name="grandTotal" value="0" />
+                                                                        </td>
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                        <div class="mt-3 text-end">
+                                                            <button type="submit" class="btn btn-primary">Add Order</button>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
+                                            </form>
                                         </div>
                                     </div>
                                 </div>
