@@ -10,7 +10,12 @@
                         <div class="d-flex align-items-end row">
                             <div class="col-sm-12">
                                 <div class="card-header">
-                                    <h5 class="card-title text-primary">{{ $title ?? '' }}</h5>
+                                    <div class="d-flex justify-content-between align-items-start flex-column flex-sm-row mt-3">
+                                        <h5 class="card-title text-primary">{{ $title ?? '' }}</h5>
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-categories">
+                                            Add Orders
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
@@ -70,12 +75,6 @@
                                                 @endforeach
                                             </tbody>
                                         </table>
-                                    </div>
-
-                                    <div class="d-flex justify-content-end">
-                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#add-categories">
-                                            Add Category
-                                        </button>
                                     </div>
                                 </div>
 

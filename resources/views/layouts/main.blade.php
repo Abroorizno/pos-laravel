@@ -263,6 +263,37 @@
         });
     });
     </script>
+    <script>
+        $(document).ready(function () {
+        // Saat amount berubah
+        $(document).on('input', '.amount', function () {
+            let modal = $(this).closest('.modal'); // cari modal terdekat
+            let grandTotal = parseInt(modal.find('.grandTotal').val()) || 0;
+            let amount = parseInt($(this).val()) || 0;
+            let change = amount - grandTotal;
+
+            // Update ke input dan span
+            if (!amount) {
+                change = 0;
+            }
+            modal.find('input[name="change_amount"]').val(change);
+            modal.find('#change').text('Rp. ' + formatRupiah(change));
+        });
+
+            // modal.find('table tbody').on('input', '.amount', function() { // Cari tbody di dalam modal
+            // let row = $(this).closest('tr');
+            // let amount = parseInt(row.find('.grandTotal').val()) || 0;
+            // let grandTotal = parseInt(row.find('.grandTotal').val()) || 0;
+            // let change = amount - grandTotal;
+
+            // modal.find('#change').text('Rp. ' + formatRupiah(change)); // Cari elemen di dalam modal
+            // modal.find('input[name="change_amount"]').val(change); // Cari elemen di dalam modal
+            // row.find('input[name="product_qty[]"]').val(qty);
+            // row.find('input[name="product_price[]"]').val(price);
+            // row.find('input[name="product_name[]"]').val(row.find('span').text());
+        });
+
+    </script>
 
     @include('sweetalert::alert', ['cdn' => "https://cdn.jsdelivr.net/npm/sweetalert2@9"]);
   </body>

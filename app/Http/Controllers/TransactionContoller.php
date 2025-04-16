@@ -49,7 +49,7 @@ class TransactionContoller extends Controller
             'order_code' => $order_code,
             'order_mount' => $request->grandTotal,
             'order_change' => 1,
-            'order_status' => 1,
+            'order_status' => 0,
         ];
 
         $order = Order::create($data);
@@ -91,7 +91,12 @@ class TransactionContoller extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        Order::where('id', $id)->update([
+            'order_change' => $request->change_amount, // ← pakai change_amount sesuai input
+            'order_status' => "1"
+        ]);
+
+        return redirect()->to('pos');
     }
 
     /**

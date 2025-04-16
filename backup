@@ -1,0 +1,36 @@
+{{--
+<button
+    class="btn btn-primary me-1"
+    type="button"
+    data-bs-toggle="collapse"
+    data-bs-target="#multiCollapseExample2"
+    aria-expanded="false"
+    aria-controls="collapseExample"
+>
+    Payment
+</button>
+--}} {{-- COLLAPS PAYMENT
+<div class="col-12 col-md-6">
+    <div class="collapse multi-collapse" id="multiCollapseExample2">
+        <div class="d-grid d-sm-flex p-3 border">
+            <img
+                src="../assets/img/elements/3.jpg"
+                alt="collapse-image"
+                height="125"
+                class="me-4 mb-sm-0 mb-2"
+            />
+            <span>
+                There are many variations of passages of Lorem Ipsum available,
+                but the majority have suffered alteration in some form, by
+                injected humour, or randomised words which don't look even
+                slightly believable. If you are going to use a passage of Lorem
+                Ipsum.
+            </span>
+        </div>
+    </div>
+</div>
+--}} {{--
+<button type="button" class="btn btn-light" data-bs-dismiss="modal">
+    Close
+</button>
+--}}

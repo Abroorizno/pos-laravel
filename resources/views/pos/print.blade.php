@@ -118,6 +118,11 @@
                 <div class="right">Rp. {{ number_format($orders->order_mount, 0, ',', '.') }}</div>
             </div>
             <div class="divider"></div>
+            <div class="item-row">
+                <div class="left-total">CHANGE PAY</div>
+                <div class="right">Rp. {{ number_format($orders->order_change, 0, ',', '.') }}</div>
+            </div>
+            <div class="divider"></div>
             <div class="footer">
                 <h3>Thank you for shopping with us!</h3>
                 <p>We hope to see you again soon.</p>

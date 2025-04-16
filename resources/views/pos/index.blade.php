@@ -62,7 +62,7 @@
 
                                 {{-- MODAL DETAIL --}}
                                 @foreach ($orders as $order)
-                                    <div class="modal fade" id="detail-orders-{{ $order->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal fade" id="detail-orders-{{ $order->id }}" class="detail-orders" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -70,34 +70,37 @@
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <div class="row mb-3">
-                                                        <div class="col mb-3">
-                                                            <label class="form-label">Order Code</label>
-                                                            <input type="text" class="form-control" value="{{ $order->order_code }}" readonly />
+                                                    <form action="{{ route('pos.update', $order->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('PUT')
+                                                        <div class="row mb-3">
+                                                            <div class="col mb-3">
+                                                                <label class="form-label">Order Code</label>
+                                                                <input type="text" class="form-control" value="{{ $order->order_code }}" readonly />
+                                                            </div>
+                                                            <div class="col mb-3">
+                                                                <label class="form-label">Order Date</label>
+                                                                <input type="text" class="form-control" value="{{ $order->created_at->format('d/m/Y') }}" readonly />
+                                                            </div>
+                                                            <div class="col mb-3">
+                                                                <label class="form-label">Order Status</label>
+                                                                <input type="text" class="form-control" value="{{ $order->order_status ? 'Paid' : 'Unpaid' }}" readonly />
+                                                            </div>
                                                         </div>
-                                                        <div class="col mb-3">
-                                                            <label class="form-label">Order Date</label>
-                                                            <input type="text" class="form-control" value="{{ $order->created_at->format('d/m/Y') }}" readonly />
-                                                        </div>
-                                                        <div class="col mb-3">
-                                                            <label class="form-label">Order Status</label>
-                                                            <input type="text" class="form-control" value="{{ $order->order_status ? 'Paid' : 'Unpaid' }}" readonly />
-                                                        </div>
-                                                    </div>
-                                                    <div class="row mb-3">
-                                                        <div class="col-sm mb-3">
-                                                            <table class="table custom-table">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Product Photo</th>
-                                                                        <th>Product Name</th>
-                                                                        <th>Quantity</th>
-                                                                        <th>Price</th>
-                                                                        <th>Subtotal</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    @foreach ($order->orderDetails as $detail)
+                                                        <div class="row mb-3">
+                                                            <div class="col-sm mb-3">
+                                                                <table class="table table-details">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Product Photo</th>
+                                                                            <th>Product Name</th>
+                                                                            <th>Quantity</th>
+                                                                            <th>Price</th>
+                                                                            <th>Subtotal</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        @foreach ($order->orderDetails as $detail)
                                                                         <tr>
                                                                             <td>
                                                                                 <img src="{{ asset('storage/' . $detail->product->product_photo) }}" alt="Product Image" class="img-fluid" style="width: 150px; height: 150px;">
@@ -107,20 +110,59 @@
                                                                             <td>{{ 'Rp. '. number_format($detail->order_price, 0, ',', '.') }}</td>
                                                                             <td>{{ 'Rp. '. number_format($detail->qty * $detail->order_price, 0, ',', '.') }}</td>
                                                                         </tr>
-                                                                    @endforeach
-                                                                </tbody>
-                                                            </table>
+                                                                        @endforeach
+                                                                        <tr>
+                                                                            <td colspan="3"></td>
+                                                                            <td>Grand Totals : </td>
+                                                                            <td>
+                                                                                <span>{{ 'Rp.' . number_format($order->order_mount, 0, ',', '.') }}</span>
+                                                                                <input type="hidden" value="{{ $order->order_mount }}" class="grandTotal" id="grandTotal">
+                                                                            </td>
+                                                                        </tr>
+                                                                        @if ($order->order_status === 0)
+                                                                        <tr>
+                                                                            <td colspan="3"></td>
+                                                                            <td>Amount :</td>
+                                                                            <td>
+                                                                                <div class="input-group">
+                                                                                    <span class="input-group-text">Rp. </span>
+                                                                                    <input type="number" name="amount" id="amount" class="amount form-control" placeholder="Input Amount Here" min="0" />
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td colspan="3"></td>
+                                                                            <td>Change Amount :</td>
+                                                                            <td>
+                                                                                <span id="change"></span>
+                                                                                <div class="input-group">
+                                                                                    <span class="input-group-text">Rp.  </span>
+                                                                                    <input type="text" name="change_amount" class="form-control" value="0" readonly>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        @endif
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <a href="{{ route('print', $order->id) }}" class="btn btn-primary" target="_blank"><i class="bx bx-printer"></i> Print</a>
-                                                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                                                    </div>
+                                                        <div class="modal-footer">
+                                                            @if ($order->order_status === 0)
+                                                                <button type="submit" class="btn btn-primary" id="payment"> Payment </button>
+
+                                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                            @else
+                                                                <a href="{{ route('print', $order->id) }}" class="btn btn-primary" target="_blank"><i class="bx bx-printer"></i> Print </a>
+                                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                            @endif
+                                                        </div>
+                                                    </form>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 @endforeach
+
 
                                 {{-- MODAL --}}
                                 <div class="modal fade" id="add-orders" tabindex="-1" aria-hidden="true">
