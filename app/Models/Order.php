@@ -12,6 +12,7 @@ class Order extends Model
         'order_date',
         'order_mount',
         'order_change',
+        'payment_amount',
         'order_status',
     ];
 

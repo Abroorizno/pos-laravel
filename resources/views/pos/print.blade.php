@@ -119,6 +119,10 @@
             </div>
             <div class="divider"></div>
             <div class="item-row">
+                <div class="left-total">PAYMENT AMOUNT</div>
+                <div class="right">Rp. {{ number_format($orders->payment_amount, 0, ',', '.') }}</div>
+            </div>
+            <div class="item-row">
                 <div class="left-total">CHANGE PAY</div>
                 <div class="right">Rp. {{ number_format($orders->order_change, 0, ',', '.') }}</div>
             </div>

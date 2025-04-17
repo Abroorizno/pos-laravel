@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('order_code')->unique();
             $table->decimal('order_mount', 10, 2);
+            // $table->decimal('payment_amount', 10, 2);
             $table->decimal('order_change', 10, 2);
             $table->tinyInteger('order_status')->default(0);
             $table->timestamps();
