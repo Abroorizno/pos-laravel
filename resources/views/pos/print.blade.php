@@ -1,6 +1,6 @@
 <style>
     body{
-        width: 70mm;
+        width: 50mm;
         margin: 0 auto;
         font-family: 'calibri', sans-serif;
         font-size: 12px;
@@ -76,6 +76,7 @@
     @media print {
         body {
             margin: 0;
+            padding: 0;
         }
     }
 </style>
